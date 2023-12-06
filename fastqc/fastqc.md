@@ -34,3 +34,16 @@ Run in an interactive session:
 nextflow run fastqc_hpc.nf -c myhpc.conf
 ```
 **Successful!**
+
+---
+
+To specify the compute parameters for the FastQC process, add the following to ```myhpc.conf```.
+```
+process {
+    withName: 'fastqc' {
+        cpus = 2
+        memory = 1.GB
+        queue = 'short'
+    }
+}
+```
