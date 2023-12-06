@@ -1,6 +1,6 @@
 #!/usr/bin/nextflow
 
-/*params.input = "*.fastq.gz"*/
+params.input = "*.fastq.gz"
 
 process fastqc {
     conda "bioconda::fastqc=0.12.1"
