@@ -31,7 +31,7 @@ conda {
 
 Run in an interactive session:
 ```
-nextflow run fastqc_hpc.nf -c myhpc.conf
+nextflow run fastqc.nf -c myhpc.conf
 ```
 **Successful!**
 
@@ -47,3 +47,28 @@ process {
     }
 }
 ```
+
+## Using Apptainer
+Using containers is considered better NextFlow practice than using conda.
+
+To use Apptainer, add the following to ```myhpc.conf```...
+```
+apptainer {
+    enabled = true
+    autoMounts = true
+    cacheDir = '/mnt/shared/scratch/jnprice/apps/singularity_cache'
+}
+```
+...and the following, within the fastqc process, to ```fastqc_hpc_appt.nf```
+```
+container "biocontainers/fastqc:v0.11.9_cv8"
+```
+
+Also move the process specific compute information from ```myhpc.conf``` into ```fastqc.nf```
+
+Run in an interactive session:
+```
+nextflow run fastqc.nf -c myhpc.conf
+```
+
+**Successful!**
