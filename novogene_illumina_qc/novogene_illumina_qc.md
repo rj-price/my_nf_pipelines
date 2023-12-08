@@ -111,3 +111,11 @@ workflow {
 }
 ```
 **Successful!**
+
+To call specific output in workflow, output using emit (eg ```emit: trim_fq```), and then edit the workflow to the following:
+```
+workflow {
+    post_fastqc(trimmomatic.out.trim_fq)
+}
+```
+**Successful!**

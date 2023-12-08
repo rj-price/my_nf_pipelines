@@ -76,7 +76,7 @@ process post_fastqc {
     
     input:
     tuple val(sample), path(trimReads)
-    tuple val(sample), path(unpairedReads)
+    //tuple val(sample), path(unpairedReads)
 
     output:
     path "*_fastqc.{zip,html}"
@@ -111,6 +111,6 @@ workflow {
     pre_fastqc(reads_ch)
     pre_multiqc(pre_fastqc.out.collect())
     trimmomatic(reads_ch)
-    post_fastqc(trimmomatic.out)
+    post_fastqc(trimmomatic.out.trim_fq)
     post_multiqc(post_fastqc.out.collect())
 }
