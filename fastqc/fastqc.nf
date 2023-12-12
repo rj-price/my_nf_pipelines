@@ -1,13 +1,28 @@
 #!/usr/bin/nextflow
 
-//params.input = "*.fastq.gz"
+/**
+ * Raw fastq data quality control
+ */
 
+// Define input data
+params.input = "*.fastq.gz"
+params.outdir = "results" 
+
+log.info """\
+            F A S T Q C
+===================================
+Reads            : ${params.input}
+Output Folder    : ${params.outdir}
+"""
+
+// Define FastQC process
 process fastqc {
     //conda "bioconda::fastqc=0.12.1"
     container "biocontainers/fastqc:v0.11.9_cv8"
     cpus = 1
     memory = 1.GB
     queue = 'short'
+    publishDir "${params.outdir}", mode: 'copy', overwrite: false
     
     input:
     path input
@@ -21,7 +36,8 @@ process fastqc {
     """
 }
 
+// Specify workflow with defined processes
 workflow {
-    Channel.fromPath("*.fastq.gz") | fastqc
-    /*Channel.fromPath(params.input) | fastqc*/
+    reads_ch = Channel.fromPath(params.input, checkIfExists:true)
+    fastqc(reads_ch)
 }
