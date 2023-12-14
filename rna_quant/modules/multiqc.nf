@@ -1,4 +1,4 @@
-process multiqc {
+process MULTIQC {
     container "ewels/multiqc:v1.18"
     publishDir "${params.results}/multiqc", mode: 'copy', overwrite: false
     cpus = 1
@@ -6,12 +6,16 @@ process multiqc {
     queue = 'short'
 
     input:
-    path fastqcOut
+    path '*'
+    path config
 
     output:
-    path "*"
+    path "multiqc_report.html"
+    path "multiqc_data"
 
-    script:
     """
-    multiqc ${fastqcOut}
+    multiqc \\
+        --config "${config}" \\
+        .
     """
+}

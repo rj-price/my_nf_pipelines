@@ -1,4 +1,4 @@
-process fastqc {
+process FASTQC {
     container "biocontainers/fastqc:v0.11.9_cv8"
     publishDir "${params.results}/fastqc", mode: 'copy', overwrite: false
     cpus = 1
@@ -10,7 +10,7 @@ process fastqc {
 
 
     output:
-    path "*_fastqc.{zip,html}"
+    tuple val(sample), path("*_fastqc.{zip,html}")
 
     script:
     """

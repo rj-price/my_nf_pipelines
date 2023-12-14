@@ -1,57 +1,78 @@
 #!/usr/bin/nextflow
 
-/**
- * Quality control, trimming and quantification of Illumina paired end RNA-seq data from Novogene.
+/*
+ * Quality control, trimming and quantification of Illumina paired end RNA-seq data.
  */
 
 // General parameters
-params.datadir  = "${launchDir}/data"
-params.outdir   = "${launchDir}/results"
+params.datadir   = "${launchDir}/data"
+params.results   = "${launchDir}/results"
 
 // Input parameters
-params.reads            = "${params.datadir}/reads/*{1,2}.fq.gz"
+params.reads            = "${params.datadir}/reads/*R{1,2}.f*q.gz"
 params.transcriptome    = "${params.datadir}/transcriptome/*.fasta"
+params.multiqc_config   = "${launchDir}/modules/multiqc_config.yaml"
 
-// Trimmomatic
+// Trimmomatic parameters
 params.slidingwindow    = "SLIDINGWINDOW:4:20"
 params.minlength        = "MINLEN:80"
 params.headcrop         = "HEADCROP:10"
 
 log.info """\
+
         R N A   Q U A N T
 =================================
             GENERAL
 Data Folder      : ${params.datadir}
-Results Folder   : ${params.outdir}
+Results Folder   : ${params.results}
 =================================
         INPUT & REFERENCES 
 Read Files       : ${params.reads}
 Transcriptome    : ${params.transcriptome}
+MultiQC Config   : ${params.multiqc_config}
 =================================
             TRIMMOMATIC
 Sliding Window   : ${params.slidingwindow}
 Minimum Length   : ${params.minlength}
 Head Crop        : ${params.headcrop}
 =================================
-"""
 
-include { fastqc as pre_fastqc; fastqc as post_fastqc } from "./modules/fastqc.nf" 
-include { trimmomatic } from "./modules/trimmomatic.nf"
-include { multiqc as pre_multiqc; multiqc as post_multiqc } from "./modules/multiqc.nf" 
-include { salmon_index } from "./modules/salmon_index.nf"
-include { salmon_quant } from "./modules/salmon_quant.nf"
+""".stripIndent()
+
+// Define modules to use in workflow
+include { FASTQC as PRE_FASTQC; FASTQC as POST_FASTQC } from "${launchDir}/modules/fastqc.nf" 
+include { TRIMMOMATIC } from "${launchDir}/modules/trimmomatic.nf"
+include { SALMON_INDEX } from "${launchDir}/modules/salmon_index.nf"
+include { SALMON_QUANT } from "${launchDir}/modules/salmon_quant.nf"
+include { MULTIQC } from "${launchDir}/modules/multiqc.nf" 
+
 
 workflow {
     reads_ch = Channel.fromFilePairs(params.reads, checkIfExists:true)
-    pre_fastqc(reads_ch)
-    pre_multiqc(pre_fastqc.out.collect())
-    trimmomatic(reads_ch)
-    post_fastqc(trimmomatic.out.trim_fq)
-    post_multiqc(post_fastqc.out.collect())
 
-    //Transcriptome index
+    PRE_FASTQC(reads_ch)
+    TRIMMOMATIC(reads_ch)
+    POST_FASTQC(TRIMMOMATIC.out.trim_fq)
+
     transcriptome_ch = Channel.fromPath(params.transcriptome)
-    salmon_index(transcriptome_ch)
-    //Qunatification of trimmed reads
-    salmon_quant(trimmomatic.out.trim_fq, salmon_index.out)
+    SALMON_INDEX(transcriptome_ch)
+
+    SALMON_QUANT(TRIMMOMATIC.out.trim_fq, SALMON_INDEX.out)
+    
+    multiqc_config = file(params.multiqc_config)
+
+    Channel.empty()
+        .mix(PRE_FASTQC.out)
+        .mix(TRIMMOMATIC.out.log_file)
+        .mix(POST_FASTQC.out)
+        .mix(SALMON_QUANT.out)
+        .map {sample, files -> files}
+        .collect()
+        .set {log_files}
+
+    MULTIQC(log_files, multiqc_config)
+}
+
+workflow.onComplete {
+    log.info ( workflow.success ? "\nDone! Open the following report in your browser --> $params.results/multiqc/multiqc_report.html\n" : "Oops .. something went wrong" )
 }
