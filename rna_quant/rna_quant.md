@@ -49,6 +49,11 @@ workflow {
 }
 ```
 
+## Process tags
+Add tags to processes to help define processes in logs, eg. 
+```
+tag "Salmon on $sample”
+```
 
 ## Test Run
 Run pipeline with Crop Diversity HPC config.
@@ -56,3 +61,16 @@ Run pipeline with Crop Diversity HPC config.
 nextflow run main.nf -c ~/cropdiv.config
 ```
 **Successful!**
+
+## Reporting
+Nextflow can produce multiple reports and charts providing several runtime metrics and execution information.
+
+Run rna_quant workflow as below:
+```
+nextflow main.nf -c ~/cropdiv.config -with-report -with-trace -with-timeline -with-dag dag.png
+```
+
+- The ```-with-report``` option enables the creation of the workflow execution report. Open the file report.html with a browser to see the report created with the above command.
+- The ```-with-trace``` option enables the creation of a tab separated value (TSV) file containing runtime information for each executed task. Check the trace.txt for an example.
+- The ```-with-timeline``` option enables the creation of the workflow timeline report showing how processes were executed over time. This may be useful to identify the most time consuming tasks and bottlenecks. See an example at this link.
+- Finally, the ```-with-dag``` option enables the rendering of the workflow execution direct acyclic graph representation. Note: This feature requires the installation of Graphviz on your computer.

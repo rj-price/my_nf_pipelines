@@ -1,0 +1,7 @@
+task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
+3	33/ef9cee	12735068	PRE_FASTQC (FastQC on WT)	CACHED	0	2023-12-19 13:55:05.405	3m 41s	3m 10s	-	-	-	-	-
+1	42/f091ed	12735069	SALMON_INDEX	CACHED	0	2023-12-19 13:55:05.577	1m 6s	35s	-	-	-	-	-
+2	20/0eb080	12735070	TRIMMOMATIC (Trimmomatic on WT)	CACHED	0	2023-12-19 13:55:05.656	5m 46s	5m 40s	-	-	-	-	-
+4	8d/d593af	12735132	SALMON_QUANT (Salmon on WT)	CACHED	0	2023-12-19 14:00:52.025	9m 14s	9m 10s	-	-	-	-	-
+5	22/98a3ef	12735131	POST_FASTQC (FastQC on WT)	CACHED	0	2023-12-19 14:00:51.851	3m 19s	3m	-	-	-	-	-
+6	56/37a298	12735233	MULTIQC	CACHED	0	2023-12-19 14:10:06.519	49.9s	20s	-	-	-	-	-
