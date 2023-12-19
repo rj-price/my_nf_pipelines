@@ -1,4 +1,6 @@
 process FASTQC {
+    tag "FastQC on $sample"
+
     container "biocontainers/fastqc:v0.11.9_cv8"
     publishDir "${params.results}/fastqc", mode: 'copy', overwrite: false
     cpus = 1

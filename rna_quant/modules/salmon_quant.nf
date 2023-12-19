@@ -1,4 +1,6 @@
 process SALMON_QUANT {
+    tag "Salmon on $sample"
+
     container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
     publishDir "${params.results}/quant", mode: 'copy', overwrite: false
     cpus = 4
