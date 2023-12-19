@@ -54,10 +54,8 @@ workflow {
     TRIMMOMATIC(reads_ch)
     POST_FASTQC(TRIMMOMATIC.out.trim_fq)
 
-    transcriptome_ch = Channel.fromPath(params.transcriptome)
-    SALMON_INDEX(transcriptome_ch)
-
-    SALMON_QUANT(TRIMMOMATIC.out.trim_fq, SALMON_INDEX.out)
+    index_ch = SALMON_INDEX(params.transcriptome)
+    quant_ch = SALMON_QUANT(TRIMMOMATIC.out.trim_fq, index_ch)
     
     multiqc_config = file(params.multiqc_config)
 
@@ -65,7 +63,7 @@ workflow {
         .mix(PRE_FASTQC.out)
         .mix(TRIMMOMATIC.out.log_file)
         .mix(POST_FASTQC.out)
-        .mix(SALMON_QUANT.out)
+        .mix(quant_ch)
         .map {sample, files -> files}
         .collect()
         .set {log_files}
