@@ -10,3 +10,6 @@ Use a simple read QC and trimming pipeline to understand NextFlow data flow.
 
 ## RNA-seq Quantification
 Use an RNA-seq QC, trimming and quantification pipeline to understand process modularity.
+
+## Fungal Variant Calling
+Use a fungal variant calling pipeline to learn how to create more complex pipelines using a sample sheet with input ingestion.

@@ -1,0 +1,33 @@
+module_order:
+    - fastqc:
+        name: 'FastQC (raw)'
+        anchor: 'pre_fastqc'
+        target: 'FastQC'
+        path_filters_exclude:
+            - '*.trimmed_fastqc.zip'
+    - trimmomatic:
+        name: 'Trimmomatic'
+        path_filters:
+            - '*_trim.log'
+    - fastqc:
+        name: 'FastQC (trimmed)'
+        anchor: 'post_fastqc'
+        target: 'FastQC'
+        path_filters:
+            - '*.trimmed_fastqc.zip'
+    - salmon:
+        name: 'Salmon Quant'
+
+run_modules:
+    - fastqc
+    - trimmomatic
+    - salmon
+    
+sp:
+  salmon/meta:
+    fn: "meta_info.json"
+
+plots_force_interactive: True
+
+show_analysis_time: False
+show_analysis_paths: False
