@@ -7,8 +7,8 @@ process BAM_STATS {
     queue = 'medium'
 
     input:
-    tuple val(sample), path(bam) 
-    tuple val(sample), path(bai) 
+    tuple val(sample), path(bam), path(bai)
+    //tuple val(sample), path(bai) 
     path genome
 
     output:

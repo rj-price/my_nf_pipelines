@@ -46,37 +46,50 @@ Head Crop        : ${params.headcrop}
  */
 
 // Define modules to use in workflow
-include { FASTQC as PRE_FASTQC; FASTQC as POST_FASTQC   } from "${launchDir}/modules/fastqc.nf" 
-include { TRIMMOMATIC                                   } from "${launchDir}/modules/trimmomatic.nf"
 include { BWA_INDEX                                     } from "${launchDir}/modules/bwa_index.nf" 
 include { SAMTOOLS_INDEX                                } from "${launchDir}/modules/samtools_index.nf" 
+
+include { FASTQC as PRE_FASTQC; FASTQC as POST_FASTQC   } from "${launchDir}/modules/fastqc.nf" 
+include { TRIMMOMATIC                                   } from "${launchDir}/modules/trimmomatic.nf"
+
 include { BWA_MAP                                       } from "${launchDir}/modules/bwa_map.nf" 
 include { SORTSAM                                       } from "${launchDir}/modules/sortsam.nf" 
 include { MARKDUP                                       } from "${launchDir}/modules/markdup.nf" 
 include { BAM_INDEX                                     } from "${launchDir}/modules/bam_index.nf" 
 include { BAM_STATS                                     } from "${launchDir}/modules/bamstats.nf" 
+
 include { MULTIQC                                       } from "${launchDir}/modules/multiqc.nf" 
 
 
 workflow {
     reads_ch = Channel.fromFilePairs(params.reads, checkIfExists:true)
 
+    // Process genome
+    genome_ch = Channel.fromPath(params.genome)
+    bwa_index_ch = BWA_INDEX(genome_ch)
+    fai_index_ch = SAMTOOLS_INDEX(genome_ch)
+
     // Process reads
     PRE_FASTQC(reads_ch)
     TRIMMOMATIC(reads_ch)
     POST_FASTQC(TRIMMOMATIC.out.trim_fq)
 
-    // Process genome
-    genome_ch = Channel.fromPath(params.genome)
-    index_ch = BWA_INDEX(genome_ch)
-    fai_index_ch = SAMTOOLS_INDEX(genome_ch)
-
     // Align reads and process bam files
-    BWA_MAP(TRIMMOMATIC.out.trim_fq, index_ch)
+    BWA_MAP(TRIMMOMATIC.out.trim_fq, bwa_index_ch.first())
     SORTSAM(BWA_MAP.out)
     MARKDUP(SORTSAM.out)
     BAM_INDEX(MARKDUP.out.bam)
-    BAM_STATS(MARKDUP.out.bam)
+    bam_ch = MARKDUP.out.bam.join(BAM_INDEX.out)
+    BAM_STATS(bam_ch, genome_ch.first())
+
+    control_ch = bam_ch.filter( ~/^WT.*/ ).view()
+
+    // Call variants, process and merge
+        // 
+
+    // Annotate variants
+        // Prepare snpeff db
+        // Run snpeff
     
     multiqc_config = file(params.multiqc_config)
 

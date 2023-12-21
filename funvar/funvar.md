@@ -12,7 +12,7 @@ trim_reads > fastqc
 
 genome_ch > bwa_index
 genome_ch > fai_index
-trim_reads, genome_ch > bwa_map > sort_sam > mark_dups > index_bam
+trim_reads, genome_ch > bwa_map > sort_sam > mark_dups > index_bam / samtools_stats
 
 mapped_ch > mutect_call > mutect_filter (AF > 0.9) > combine_calls
 calls_ch > snpeff
