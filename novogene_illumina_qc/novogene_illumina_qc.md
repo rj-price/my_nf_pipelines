@@ -119,3 +119,10 @@ workflow {
 }
 ```
 **Successful!**
+
+## Multiple Read Sets
+Test pipeline on three read sets to check that all run through.
+```
+nextflow run novogene_illumina_qc.nf -c ~/cropdiv.config
+```
+**Successful!**

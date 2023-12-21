@@ -74,3 +74,11 @@ nextflow main.nf -c ~/cropdiv.config -with-report -with-trace -with-timeline -wi
 - The ```-with-trace``` option enables the creation of a tab separated value (TSV) file containing runtime information for each executed task. Check the trace.txt for an example.
 - The ```-with-timeline``` option enables the creation of the workflow timeline report showing how processes were executed over time. This may be useful to identify the most time consuming tasks and bottlenecks. See an example at this link.
 - Finally, the ```-with-dag``` option enables the rendering of the workflow execution direct acyclic graph representation. Note: This feature requires the installation of Graphviz on your computer.
+
+## Multiple Read Sets
+Test pipeline on three read sets to check that all run through.
+```
+nextflow run main.nf -c ~/cropdiv.config
+```
+**Successful!**
+
