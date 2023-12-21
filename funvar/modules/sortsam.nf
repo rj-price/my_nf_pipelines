@@ -1,4 +1,6 @@
 process SORTSAM {
+    tag "Sort BAM on $sample"
+
     container "broadinstitute/gatk:4.3.0.0"
     cpus = 2
     memory = 4.GB

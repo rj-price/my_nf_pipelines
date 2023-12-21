@@ -1,4 +1,6 @@
 process TRIMMOMATIC {
+    tag "Trimmomatic on $sample"
+
     container "quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2"
     publishDir "${params.results}/trimmed", mode: 'copy', overwrite: false
     cpus = 4

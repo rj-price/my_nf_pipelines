@@ -1,4 +1,6 @@
 process BWA_MAP {
+    tag "BWA on $sample"
+
     container "rjprice/bwa_samtools:latest"
     cpus = 4
     memory = 1.GB

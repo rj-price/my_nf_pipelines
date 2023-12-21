@@ -1,4 +1,6 @@
 process BAM_INDEX {
+    tag "BAM Index on $sample"
+
     container "rjprice/bwa_samtools:latest"
     cpus = 2
     memory = 1.GB
@@ -8,7 +10,7 @@ process BAM_INDEX {
     tuple val(sample), path(bam) 
 
     output:
-    tuple val("${sample}"), path("${sample}*.bam.bai")
+    tuple val("${sample}"), path("${sample}*.bai")
     
     script:
     """

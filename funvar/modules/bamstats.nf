@@ -1,4 +1,6 @@
 process BAM_STATS {
+    tag "BAM Stats on $sample"
+
     container "rjprice/bwa_samtools:latest"
     cpus = 2
     memory = 1.GB
@@ -6,6 +8,7 @@ process BAM_STATS {
 
     input:
     tuple val(sample), path(bam) 
+    tuple val(sample), path(bai) 
     path genome
 
     output:
@@ -13,6 +16,6 @@ process BAM_STATS {
     
     script:
     """
-    samtools stats --threads 2 ${genome} ${bam} > ${sample}.stats
+    samtools stats --threads 2 --ref-seq ${genome} ${bam} > ${sample}.stats
     """
 }
