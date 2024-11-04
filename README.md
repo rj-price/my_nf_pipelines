@@ -13,3 +13,6 @@ Use an RNA-seq QC, trimming and quantification pipeline to understand process mo
 
 ## Fungal Variant Calling
 Use a fungal variant calling pipeline to learn how to create more complex pipelines using a sample sheet with input ingestion.
+
+## ONT Genome Assembly
+Adapting my [ONT assembly pipeline](https://github.com/rj-price/ont_assembly_starter) into a NextFlow pipeline using the new SeqeraAI.

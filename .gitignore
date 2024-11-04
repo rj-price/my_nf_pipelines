@@ -1,0 +1,6 @@
+fastqc/*.fastq.gz
+*/data
+*/results
+*/.nextflow
+*/.nextflow.log*
+*/work
