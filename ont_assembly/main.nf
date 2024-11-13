@@ -2,35 +2,15 @@
 
 nextflow.enable.dsl = 2
 
-/*
- * Quality control, filtering and assembly of Oxford Nanopore WGS data.
- */
-
 // Parameters
 params.reads_dir = null
 params.genome_size = null
-params.outdir = "${launchDir}/results"
+params.outdir = null
 
 // Input validation
 if (!params.reads_dir || !params.genome_size || !params.outdir) {
     error "Missing required parameters. Please provide --reads_dir, --genome_size, and --outdir."
 }
-
-log.info """\
-
-     O N T   A S S E M B L Y
-=================================
-             GENERAL
-Reads Folder     : ${params.reads_dir}
-Results Folder   : ${params.outdir}
-=================================
-              INPUT
-Genome Size      : ${params.genome_size}
-=================================
-            FILTLONG
-=================================
-
-""".stripIndent()
 
 // Import modules
 include { PORECHOP } from './modules/porechop'
@@ -41,6 +21,7 @@ include { RACON } from './modules/racon'
 include { MEDAKA } from './modules/medaka'
 include { BUSCO } from './modules/busco'
 include { GFASTATS } from './modules/gfastats'
+include { MULTIQC } from './modules/multiqc'
 
 // Main workflow
 workflow {
@@ -70,6 +51,15 @@ workflow {
 
     // GFAStats
     GFASTATS(MEDAKA.out, params.genome_size)
+
+    // Collect all QC reports
+    multiqc_files = Channel.empty()
+    multiqc_files = multiqc_files.mix(NANOPLOT.out)
+    multiqc_files = multiqc_files.mix(BUSCO.out)
+    multiqc_files = multiqc_files.mix(GFASTATS.out)
+
+    // MultiQC
+    MULTIQC(multiqc_files.collect())
 }
 
 // Workflow completion notification
