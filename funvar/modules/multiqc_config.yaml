@@ -15,17 +15,25 @@ module_order:
         target: 'FastQC'
         path_filters:
             - '*.trimmed_fastqc.zip'
-    - salmon:
-        name: 'Salmon Quant'
+    - picard/markdups:
+        name: 'Mark Duplicates'
+        path_filters:
+            - '*.markdup.txt'
+    - samtools/stats:
+        name: 'BAM Stats'
+        path_filters:
+            - '*.stats'
 
 run_modules:
     - fastqc
     - trimmomatic
-    - salmon
-    
+    - picard/markdups
+    - samtools/stats
+
 sp:
-  salmon/meta:
-    fn: "meta_info.json"
+    samtools/stats:
+        contents: This file was produced by samtools stats
+        shared: true
 
 plots_force_interactive: True
 

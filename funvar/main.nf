@@ -11,6 +11,7 @@ params.results   = "${launchDir}/results"
 // Input parameters
 params.reads            = "${params.datadir}/reads/*R{1,2}.f*q.gz"
 params.genome           = "${params.datadir}/genome/*.fasta"
+params.annotation       = "${params.datadir}/genome/*.gff3"
 params.multiqc_config   = "${launchDir}/modules/multiqc_config.yaml"
 
 // Trimmomatic parameters
@@ -34,6 +35,7 @@ Results Folder   : ${params.results}
         INPUT & REFERENCES 
 Read Files       : ${params.reads}
 Genome           : ${params.genome}
+Annotation       : ${params.annotation}
 MultiQC Config   : ${params.multiqc_config}
 =================================
             TRIMMOMATIC
@@ -58,6 +60,8 @@ include { MARKDUP                                       } from "${launchDir}/mod
 include { BAM_INDEX                                     } from "${launchDir}/modules/bam_index.nf" 
 include { BAM_STATS                                     } from "${launchDir}/modules/bamstats.nf" 
 
+include { SNPEFF_DB                                     } from "${launchDir}/modules/snpeff_db.nf" 
+
 include { MULTIQC                                       } from "${launchDir}/modules/multiqc.nf" 
 
 
@@ -66,6 +70,7 @@ workflow {
 
     // Process genome
     genome_ch = Channel.fromPath(params.genome)
+    annotation_ch = Channel.fromPath(params.annotation)
     bwa_index_ch = BWA_INDEX(genome_ch)
     fai_index_ch = SAMTOOLS_INDEX(genome_ch)
 
@@ -82,13 +87,15 @@ workflow {
     bam_ch = MARKDUP.out.bam.join(BAM_INDEX.out)
     BAM_STATS(bam_ch, genome_ch.first())
 
-    control_ch = bam_ch.filter( ~/^WT.*/ ).view()
+    control_ch = bam_ch.filter( ~/^WT.*/ )
+    control_ch.view()
 
     // Call variants, process and merge
         // 
 
     // Annotate variants
         // Prepare snpeff db
+    //SNPEFF_DB(annotation_ch, genome_ch.first())
         // Run snpeff
     
     multiqc_config = file(params.multiqc_config)

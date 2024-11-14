@@ -8,7 +8,6 @@ process BAM_STATS {
 
     input:
     tuple val(sample), path(bam), path(bai)
-    //tuple val(sample), path(bai) 
     path genome
 
     output:
