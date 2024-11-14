@@ -27,36 +27,37 @@ include { MULTIQC } from './modules/multiqc'
 workflow {
     // Create input channel
     reads_ch = Channel.fromPath(params.reads_dir)
+        .map { dir -> tuple(dir.baseName, dir) }
 
     // Porechop
     PORECHOP(reads_ch)
 
     // NanoPlot
-    NANOPLOT(PORECHOP.out)
+    NANOPLOT(PORECHOP.out.porechopped)
 
     // Filtlong
-    FILTLONG(PORECHOP.out)
+    FILTLONG(PORECHOP.out.porechopped)
 
     // NECAT
-    NECAT(FILTLONG.out, params.genome_size)
+    NECAT(FILTLONG.out.filtered, params.genome_size)
 
     // Racon
-    RACON(FILTLONG.out, NECAT.out)
+    RACON(FILTLONG.out.filtered, NECAT.out.assembly)
 
     // Medaka
-    MEDAKA(FILTLONG.out, RACON.out)
+    MEDAKA(FILTLONG.out.filtered, RACON.out.polished)
 
     // BUSCO
-    BUSCO(MEDAKA.out)
+    BUSCO(MEDAKA.out.consensus)
 
     // GFAStats
-    GFASTATS(MEDAKA.out, params.genome_size)
+    GFASTATS(MEDAKA.out.consensus, params.genome_size)
 
     // Collect all QC reports
     multiqc_files = Channel.empty()
-    multiqc_files = multiqc_files.mix(NANOPLOT.out)
-    multiqc_files = multiqc_files.mix(BUSCO.out)
-    multiqc_files = multiqc_files.mix(GFASTATS.out)
+    multiqc_files = multiqc_files.mix(NANOPLOT.out.collect())
+    multiqc_files = multiqc_files.mix(BUSCO.out.collect())
+    multiqc_files = multiqc_files.mix(GFASTATS.out.collect())
 
     // MultiQC
     MULTIQC(multiqc_files.collect())

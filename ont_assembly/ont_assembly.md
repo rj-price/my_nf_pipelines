@@ -17,5 +17,13 @@ Run script testing on each module through SeqeraAI.
 
 ## Test Run
 ```bash
-nextflow run main.nf -c ~/cropdiv.config --reads_dir /mnt/shared/scratch/jnprice/private/yeasties/ONT_assemblies/barcode03/barcode03.fastq.gz --genome_size 15000000
+nextflow run main.nf -c ~/cropdiv.config --reads_dir /mnt/shared/scratch/jnprice/private/yeasties/ONT_assemblies/barcode03/barcode03.fastq.gz --genome_size 15000000 --outdir ./output
+```
+
+**Did not work due to processes trying to output directly to outdir rather than work**
+
+Update processes and workflow to incorporate publishDir and try again.
+
+```bash
+nextflow run main.nf -c ~/cropdiv.config --reads_dir /mnt/shared/scratch/jnprice/private/yeasties/ONT_assemblies/barcode03/barcode03.fastq.gz --genome_size 15000000 --outdir ./output
 ```

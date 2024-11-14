@@ -1,21 +1,20 @@
 process MEDAKA {
-    container 'community.wave.seqera.io/library/medaka:2.0.1--c15f6748e3c63d63'
+    container 'quay.io/biocontainers/medaka:2.0.1--py38h8774169_0'
+    publishDir "${params.outdir}/${sample_id.baseName}/final", mode: 'copy'
     cpus = 4
     memory = 40.GB
     queue = 'long'
     
     input:
-    path fastq
-    path racon_assembly
+    tuple val(sample_id), path(fastq)
+    tuple val(sample_id), path(racon_assembly)
 
     output:
-    path "${params.outdir}/${fastq.simpleName}/final/${fastq.simpleName}_medaka.fasta"
+    tuple val(sample_id), path("${sample_id.baseName}_medaka.fasta"), emit: consensus
 
     script:
     """
-    mkdir -p ${params.outdir}/${fastq.simpleName}/longpolish
-    mkdir -p ${params.outdir}/${fastq.simpleName}/final
-    medaka_consensus -i ${fastq} -d ${racon_assembly} -o ${params.outdir}/${fastq.simpleName}/longpolish -t ${task.cpus} -m r941_min_high_g360
-    cp ${params.outdir}/${fastq.simpleName}/longpolish/consensus.fasta ${params.outdir}/${fastq.simpleName}/final/${fastq.simpleName}_medaka.fasta
+    medaka_consensus -i ${fastq} -d ${racon_assembly} -o . -t ${task.cpus} -m r1041_e82_400bps_sup_g615
+    mv consensus.fasta ${sample_id.baseName}_medaka.fasta
     """
 }

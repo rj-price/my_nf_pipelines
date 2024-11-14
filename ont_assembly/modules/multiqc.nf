@@ -1,7 +1,7 @@
 process MULTIQC {
-    container 'quay.io/biocontainers/multiqc:1.13--pyhdfd78af_0'
+    container 'community.wave.seqera.io/library/multiqc:1.25.1--dc1968330462e945'
     
-    publishDir "${params.outdir}/multiqc", mode: 'copy'
+    publishDir "${params.outdir}/${sample_id.baseName}/multiqc", mode: 'copy'
 
     input:
     path '*'

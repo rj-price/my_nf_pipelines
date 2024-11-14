@@ -1,18 +1,18 @@
 process PORECHOP {
     container 'community.wave.seqera.io/library/porechop:0.2.4--b0e5b14915819586'
+    publishDir "${params.outdir}/${sample_id.baseName}", mode: 'copy'
     cpus = 4
     memory = 30.GB
     queue = 'medium'
 
     input:
-    path reads_dir
+    tuple val(sample_id), path(reads_dir)
 
     output:
-    path "${params.outdir}/${reads_dir.baseName}/${reads_dir.baseName}.fastq.gz"
+    tuple val(sample_id), path("${sample_id.baseName}.fastq.gz"), emit: porechopped
 
     script:
     """
-    mkdir -p ${params.outdir}/${reads_dir.baseName}
-    porechop -t ${task.cpus} -i ${reads_dir} -o ${params.outdir}/${reads_dir.baseName}/${reads_dir.baseName}.fastq.gz
+    porechop -t ${task.cpus} -i ${reads_dir} -o ${sample_id.baseName}.fastq.gz
     """
 }
