@@ -14,7 +14,8 @@ process MEDAKA {
 
     script:
     """
-    medaka_consensus -i ${fastq} -d ${racon_assembly} -o . -t ${task.cpus} -m r1041_e82_400bps_sup_g615
+    wget https://github.com/nanoporetech/medaka/raw/master/medaka/data/r1041_e82_400bps_sup_g615_model_pt.tar.gz
+    medaka_consensus -i ${fastq} -d ${racon_assembly} -o . -t ${task.cpus} -m r1041_e82_400bps_sup_g615_model_pt.tar.gz
     mv consensus.fasta ${sample_id}_medaka.fasta
     """
 }
