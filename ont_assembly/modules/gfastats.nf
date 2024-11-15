@@ -11,9 +11,12 @@ process GFASTATS {
 
     output:
     path "${sample_id}_genome_stats.tsv"
+    path "${sample_id}_contig_stats.tsv"
 
     script:
     """
     gfastats ${assembly} ${genome_size} --threads ${task.cpus} --tabular --nstar-report > ${sample_id}_genome_stats.tsv
+
+    gfastats ${assembly} ${genome_size} --threads ${task.cpus} --tabular --nstar-report --seq-report > ${sample_id}_contig_stats.tsv
     """
 }

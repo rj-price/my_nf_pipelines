@@ -57,7 +57,6 @@ workflow {
     multiqc_files = Channel.empty()
     multiqc_files = multiqc_files.mix(NANOPLOT.out.collect())
     multiqc_files = multiqc_files.mix(BUSCO.out.collect())
-    multiqc_files = multiqc_files.mix(GFASTATS.out.collect())
 
     // MultiQC
     MULTIQC(multiqc_files.collect())

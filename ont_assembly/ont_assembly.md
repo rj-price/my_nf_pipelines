@@ -38,6 +38,5 @@ WARN  nextflow.processor.PublishDir - Process `MULTIQC` publishDir path contains
 
 
 # To Do:
-- Add contig stats to gfastats process
 - Add parameter for prefix (default assembly) to overcome sampleID problem
 - Add additional parameters for each module (ie. min length, min Q, coverage, model, etc.)
