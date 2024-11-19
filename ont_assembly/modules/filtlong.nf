@@ -13,6 +13,6 @@ process FILTLONG {
 
     script:
     """
-    filtlong --min_length 1000 --min_mean_q 90 ${fastq} | gzip > ${params.prefix}_filt.fastq.gz
+    filtlong --min_length ${params.min_length} --min_mean_q ${params.min_mean_q} ${fastq} | gzip > ${params.prefix}_filt.fastq.gz
     """
 }

@@ -21,8 +21,8 @@ process NECAT {
     sed -i 's/ONT_READ_LIST=/ONT_READ_LIST=read_list.txt/g' ${params.prefix}_config.txt
     sed -i "s/GENOME_SIZE=/GENOME_SIZE=${genome_size}/g" ${params.prefix}_config.txt
     sed -i 's/THREADS=4/THREADS=${task.cpus}/g' ${params.prefix}_config.txt
-    sed -i 's/PREP_OUTPUT_COVERAGE=40/PREP_OUTPUT_COVERAGE=80/g' ${params.prefix}_config.txt
-    sed -i 's/CNS_OUTPUT_COVERAGE=30/CNS_OUTPUT_COVERAGE=80/g' ${params.prefix}_config.txt
+    sed -i 's/PREP_OUTPUT_COVERAGE=40/PREP_OUTPUT_COVERAGE=${params.coverage}/g' ${params.prefix}_config.txt
+    sed -i 's/CNS_OUTPUT_COVERAGE=30/CNS_OUTPUT_COVERAGE=${params.coverage}/g' ${params.prefix}_config.txt
 
     necat correct ${params.prefix}_config.txt
     necat assemble ${params.prefix}_config.txt

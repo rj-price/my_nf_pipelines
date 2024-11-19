@@ -9,10 +9,10 @@ process BUSCO {
     tuple val(sample_id), path(assembly)
 
     output:
-    path "BUSCO_${params.prefix}.fungi"
+    path "BUSCO_${params.prefix}"
 
     script:
     """
-    busco -m genome -c ${task.cpus} -i ${assembly} -o BUSCO_${params.prefix}.fungi -l fungi_odb10
+    busco -m genome -c ${task.cpus} -i ${assembly} -o BUSCO_${params.prefix} -l ${params.lineage}
     """
 }

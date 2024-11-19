@@ -36,6 +36,6 @@ Modify `medaka.nf` process to download model and re-run using `-resume` flag.
 WARN  nextflow.processor.PublishDir - Process `MULTIQC` publishDir path contains a variable with a null value
 ```
 
+Added prefix parameter to overcome above issue. Also added additional parameters for pipeline customisation.
 
-# To Do:
-- Add additional parameters for each module (ie. min length, min Q, coverage, model, etc.)
+**Pipeline working successfully!**
