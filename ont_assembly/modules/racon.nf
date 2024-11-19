@@ -2,7 +2,7 @@ process RACON {
     container 'community.wave.seqera.io/library/minimap2_racon:5f257adb6aaf9096'
     publishDir "${params.outdir}/${params.prefix}/longpolish", mode: 'copy'
     cpus = 4
-    memory = 40.GB
+    memory = { 40.GB * task.attempt }
     queue = 'long'
     
     input:

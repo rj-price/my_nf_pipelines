@@ -2,7 +2,7 @@ process BUSCO {
     container 'community.wave.seqera.io/library/busco:5.2.2--b38cf04af6adc85b'
     publishDir "${params.outdir}/${params.prefix}/final", mode: 'copy'
     cpus = 8
-    memory = 3.GB
+    memory = { 3.GB * task.attempt }
     queue = 'medium'
 
     input:

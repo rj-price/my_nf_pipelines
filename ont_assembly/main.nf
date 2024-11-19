@@ -13,7 +13,7 @@ if (!params.reads_dir || !params.outdir || !params.genome_size || !params.prefix
     error "Missing required parameters. Please provide --reads_dir, --genome_size, --prefix, and --outdir."
 }
 
-/*
+
 log.info """\
 
      O N T   A S S E M B L Y     
@@ -26,7 +26,7 @@ Prefix           : ${params.prefix}
 =================================
 
 """.stripIndent()
- */
+
 
 // Import modules
 include { PORECHOP } from './modules/porechop'
