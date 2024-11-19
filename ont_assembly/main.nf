@@ -2,15 +2,31 @@
 
 nextflow.enable.dsl = 2
 
-// Parameters
-params.reads_dir = null
-params.genome_size = null
-params.outdir = null
+// Input Parameters
+params.reads_dir    = "${launchDir}/data"
+params.outdir       = "${launchDir}/results"
+params.prefix       = "assembly"
+params.genome_size  = null
 
 // Input validation
-if (!params.reads_dir || !params.genome_size || !params.outdir) {
-    error "Missing required parameters. Please provide --reads_dir, --genome_size, and --outdir."
+if (!params.reads_dir || !params.outdir || !params.genome_size || !params.prefix ) {
+    error "Missing required parameters. Please provide --reads_dir, --genome_size, --prefix, and --outdir."
 }
+
+/*
+log.info """\
+
+     O N T   A S S E M B L Y     
+=================================
+         INPUT PARAMETERS
+Data Folder      : ${params.reads_dir}
+Ouput Folder     : ${params.outdir}
+Genome Size      : ${params.genome_size}
+Prefix           : ${params.prefix}
+=================================
+
+""".stripIndent()
+ */
 
 // Import modules
 include { PORECHOP } from './modules/porechop'
